@@ -1,0 +1,27 @@
+{
+  "name": "simple-p2p",
+  "version": "1.0.0",
+  "description": "an realtime p2p file sharing app ig",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r2hu1/simple-p2p.git"
+  },
+  "author": "r2hu1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r2hu1/simple-p2p/issues"
+  },
+  "homepage": "https://github.com/r2hu1/simple-p2p#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
