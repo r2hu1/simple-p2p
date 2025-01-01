@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple P2P Socket.IO</title>
+</head>
+
+<body>
+    <h1>Simple P2P Application</h1>
+    <div id="app">
+        <input id="roomNameInput" type="text" placeholder="Enter room name">
+        <button id="createRoomBtn">Create Room</button>
+        <button id="joinRoomBtn">Join Room</button>
+        <input id="fileInput" type="file" style="display: none;">
+        <button id="shareFileBtn" style="display: none;">Share File</button>
+        <p id="status"></p>
+    </div>
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+    <script>
+        const socket = io("https://glowing-pancake-wjvqjq6g99q25p54-3000.app.github.dev/"); // Update with your server URL if needed
+
+        const roomNameInput = document.getElementById("roomNameInput");
+        const createRoomBtn = document.getElementById("createRoomBtn");
+        const joinRoomBtn = document.getElementById("joinRoomBtn");
+        const fileInput = document.getElementById("fileInput");
+        const shareFileBtn = document.getElementById("shareFileBtn");
+        const status = document.getElementById("status");
+
+        // Update status messages
+        const updateStatus = (message) => {
+            status.textContent = message;
+        };
+
+        // Create a room
+        createRoomBtn.addEventListener("click", () => {
+            const roomName = roomNameInput.value.trim();
+            if (!roomName) return updateStatus("Room name cannot be empty.");
+            socket.emit("createRoom", roomName);
+        });
+
+        // Join a room
+        joinRoomBtn.addEventListener("click", () => {
+            const roomName = roomNameInput.value.trim();
+            if (!roomName) return updateStatus("Room name cannot be empty.");
+            socket.emit("joinRoom", roomName);
+        });
+
+        // Share a file
+        shareFileBtn.addEventListener("click", () => {
+            const file = fileInput.files[0];
+            if (!file) return updateStatus("No file selected.");
+            const reader = new FileReader();
+            reader.onload = () => {
+                const fileData = reader.result;
+                const roomName = roomNameInput.value.trim();
+                socket.emit("shareFile", { roomName, file: fileData });
+                updateStatus("File shared successfully.");
+            };
+            reader.readAsDataURL(file); // Convert file to Base64
+        });
+
+        // Handle server responses
+        socket.on("connect", () => {
+            updateStatus(`Connected to server (ID: ${socket.id}).`);
+        });
+
+        socket.on("roomCreated", (roomName) => {
+            updateStatus(`Room '${roomName}' created successfully.`);
+            fileInput.style.display = "block";
+            shareFileBtn.style.display = "block";
+        });
+
+        socket.on("userJoined", ({ userId, participants }) => {
+            updateStatus(`User ${userId} joined. Participants: ${participants.length}`);
+        });
+
+        socket.on("error", (error) => {
+            updateStatus(`Error: ${error.message}`);
+        });
+
+        socket.on("receiveFile", ({ sender, file }) => {
+            updateStatus(`File received from ${sender}.`);
+            const link = document.createElement("a");
+            link.href = file;
+            link.download = "shared_file";
+            link.textContent = "Download File";
+            document.body.appendChild(link);
+        });
+
+        socket.on("userLeft", ({ userId, participants }) => {
+            updateStatus(`User ${userId} left. Participants: ${participants.length}`);
+        });
+    </script>
+</body>
+
+</html>
