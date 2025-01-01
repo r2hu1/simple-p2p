@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple P2P Socket.IO</title>
+   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
 
 <body>
-    <h1>Simple P2P Application</h1>
     <div id="app">
         <input id="roomNameInput" type="text" placeholder="Enter room name">
         <button id="createRoomBtn">Create Room</button>
@@ -19,7 +19,7 @@
     </div>
     <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
     <script>
-        const socket = io("https://glowing-pancake-wjvqjq6g99q25p54-3000.app.github.dev/"); // Update with your server URL if needed
+        const socket = io("https://glowing-pancake-wjvqjq6g99q25p54-3010.app.github.dev/"); // Update with your server URL if needed
 
         const roomNameInput = document.getElementById("roomNameInput");
         const createRoomBtn = document.getElementById("createRoomBtn");
