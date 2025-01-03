@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input id="fileInput" type="file">
+    <button id="shareFileBtn">Share File</button>
+    <p id="status"></p>
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+
+    <script>
+        const socket = io(new URL(window.location.href).origin);
+        let roomId = new URLSearchParams(window.location.search).get("roomId");
+        const fileInput = document.getElementById("fileInput");
+        const shareFileBtn = document.getElementById("shareFileBtn");
+        const status = document.getElementById("status");
+
+        socket.emit("joinRoom", roomId);
+        socket.on("roomCreated", (roomName) => {
+            updateStatus(`Room '${roomName}' created successfully.`);
+        });
+
+        const updateStatus = (message) => {
+            status.textContent = message;
+        };
+
+        socket.on("userJoined", ({ userId, participants }) => {
+            updateStatus(`User ${userId} joined. Participants: ${participants.length}`);
+        });
+
+        socket.on("error", (error) => {
+            updateStatus(`Error: ${error.message}`);
+        });
+
+        socket.on("userLeft", ({ userId, participants }) => {
+            updateStatus(`User ${userId} left. Participants: ${participants.length}`);
+        });
+
+        shareFileBtn.addEventListener("click", () => {
+            const file = fileInput.files[0];
+            if (!file) return updateStatus("No file selected.");
+            const reader = new FileReader();
+            reader.onload = () => {
+                const fileData = reader.result;
+                const roomName = roomId;
+                socket.emit("shareFile", { roomName, file: fileData });
+                updateStatus("File shared successfully.");
+            };
+            reader.readAsDataURL(file); // Convert file to Base64
+        });
+
+
+    </script>
+</body>
+
+</html>
