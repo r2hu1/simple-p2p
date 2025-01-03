@@ -11,9 +11,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-[hsl(224,71.4%,4.1%)] text-white font-[Manrope] max-w-[500px]">
+<body class="py-10 bg-[hsl(224,71.4%,4.1%)] text-white font-[Manrope] max-w-[500px]">
     <div id="app">
-        <div class="grid gap-4 px-6 py-10">
+        <div class="grid gap-4 px-6 mb-10">
             <h1 class="text-4xl font-bold">
                 Share images without compromizing quality with ease!
             </h1>
@@ -36,8 +36,8 @@
     <script>
         const socket = io(new URL(window.location.href).origin);
 
+        let roomId = null;
 
-        const roomNameInput = document.getElementById("roomNameInput");
         const createRoomBtn = document.getElementById("createRoomBtn");
         const joinRoomBtn = document.getElementById("joinRoomBtn");
         const fileInput = document.getElementById("fileInput");
@@ -51,14 +51,15 @@
 
         // Create a room
         createRoomBtn.addEventListener("click", () => {
-            const roomName = roomNameInput.value.trim();
-            if (!roomName) return updateStatus("Room name cannot be empty.");
-            socket.emit("createRoom", roomName);
+            roomId = Math.random().toString(36).substring(2, 10);
+            if (!roomId) return updateStatus("Room name cannot be empty.");
+            socket.emit("createRoom", roomId);
+            window.location.href = `/share?roomId=${roomId}`;
         });
 
         // Join a room
         joinRoomBtn.addEventListener("click", () => {
-            const roomName = roomNameInput.value.trim();
+            const roomName = roomId;
             if (!roomName) return updateStatus("Room name cannot be empty.");
             socket.emit("joinRoom", roomName);
         });
@@ -70,7 +71,7 @@
             const reader = new FileReader();
             reader.onload = () => {
                 const fileData = reader.result;
-                const roomName = roomNameInput.value.trim();
+                const roomName = roomId;
                 socket.emit("shareFile", { roomName, file: fileData });
                 updateStatus("File shared successfully.");
             };
