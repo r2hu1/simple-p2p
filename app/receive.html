@@ -8,21 +8,32 @@
 </head>
 
 <body>
-    <p id="status"></p>
+    <div>
+        <div class="grid gap-3" id="joinDiv">
+            <label for="id">Room ID</label>
+            <input type="text" name="id" id="roomId" placeholder="eg: e7u891" />
+            <button>Join</button>
+        </div>
+        <p id="status"></p>
+    </div>
     <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
     <script>
         const socket = io(new URL(window.location.href).origin);
-        let roomId = new URLSearchParams(window.location.search).get("roomId");
+        let roomId = document.querySelector("#roomId");
         const status = document.getElementById("status");
 
         const updateStatus = (message) => {
             status.textContent = message;
         };
-        
-        socket.emit("joinRoom", roomId);
+
+        document.querySelector("button").addEventListener("click", () => {
+            roomId = document.querySelector("#roomId").value;
+            socket.emit("joinRoom", roomId);
+        });
 
         socket.on("userJoined", ({ userId, participants }) => {
             updateStatus(`User ${userId} joined. Participants: ${participants.length}`);
+            document.querySelector("#joinDiv").style.display = "none";
         });
 
         socket.on("error", (error) => {
