@@ -14,6 +14,14 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "app", "home.html"));
 });
 
+app.get("/share", (req, res) => {
+  res.sendFile(path.join(__dirname, "app", "share.html"));
+});
+
+app.get("/receive", (req, res) => {
+  res.sendFile(path.join(__dirname, "app", "receive.html"));
+});
+
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
