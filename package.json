@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/r2hu1/simple-p2p#readme",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -5,7 +7,14 @@ const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const SOCKET_SERVER_URL = process.env.SOCKET_SERVER_URL;
+const io = new Server(server, {
+  cors: {
+    origin: SOCKET_SERVER_URL, // Replace with your Vercel domain
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 const rooms = {};
 
