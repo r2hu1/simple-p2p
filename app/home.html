@@ -5,21 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P2P Share</title>
-   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-[hsl(224,71.4%,4.1%)] text-white font-[Manrope] max-w-[500px]">
     <div id="app">
-        <input id="roomNameInput" type="text" placeholder="Enter room name">
-        <button id="createRoomBtn">Create Room</button>
-        <button id="joinRoomBtn">Join Room</button>
-        <input id="fileInput" type="file" style="display: none;">
-        <button id="shareFileBtn" style="display: none;">Share File</button>
-        <p id="status"></p>
+        <div class="grid gap-4 px-6 py-10">
+            <h1 class="text-4xl font-bold">
+                Share images without compromizing quality with ease!
+            </h1>
+            <p class="text-base text-gray-300">
+                Share images with your friends in original quality without any compression. Without any server in between, share images directly between devices.
+            </p>
+        </div>
+        <div class="px-6 grid gap-3">
+            <!-- <input id="roomNameInput" type="text" placeholder="Enter room name"> -->
+            <button id="createRoomBtn"
+                class="h-12 px-6 w-full py-2 bg-[hsl(0,0%,98%)] text-[hsl(240,5.9%,10%)] hover:bg-[hsl(0,0%,98%)]/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">Share</button>
+            <button id="joinRoomBtn"
+                class="h-12 px-6 w-full py-2 bg-[hsl(240,5.9%,10%)] text-[hsl(0,0%,98%)] hover:bg-[hsl(240,5.9%,10%)]/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">Receive</button>
+            <input id="fileInput" type="file" style="display: none;">
+            <button id="shareFileBtn" style="display: none;">Share File</button>
+            <p id="status"></p>
+        </div>
     </div>
     <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
     <script>
-        const socket = io("https://simple-p2p-ruddy.vercel.app/"); // Update with your server URL if needed
+        const socket = io(new URL(window.location.href).origin);
+
 
         const roomNameInput = document.getElementById("roomNameInput");
         const createRoomBtn = document.getElementById("createRoomBtn");
