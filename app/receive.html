@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p id="status"></p>
+    <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+    <script>
+        const socket = io(new URL(window.location.href).origin);
+        let roomId = new URLSearchParams(window.location.search).get("roomId");
+        const status = document.getElementById("status");
+
+        const updateStatus = (message) => {
+            status.textContent = message;
+        };
+        
+        socket.emit("joinRoom", roomId);
+
+        socket.on("userJoined", ({ userId, participants }) => {
+            updateStatus(`User ${userId} joined. Participants: ${participants.length}`);
+        });
+
+        socket.on("error", (error) => {
+            updateStatus(`Error: ${error.message}`);
+        });
+
+        socket.on("receiveFile", ({ sender, file }) => {
+            updateStatus(`File received from ${sender}.`);
+            const link = document.createElement("a");
+            link.href = file;
+            link.download = "shared_file";
+            link.textContent = "Download File";
+            document.body.appendChild(link);
+        });
+
+        socket.on("userLeft", ({ userId, participants }) => {
+            updateStatus(`User ${userId} left. Participants: ${participants.length}`);
+        });
+
+    </script>
+</body>
+
+</html>
