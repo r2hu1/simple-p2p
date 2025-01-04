@@ -10,6 +10,9 @@ idk why it runs smoothly on localhost but it didn't when i hosted it anyways,
 
 visit `http://localhost:3010`
 
+## Important
+to send file just click on `Share File` button but to receive file replace the url with `http://localhost:3010/receive` and enter the room id on the input that is avilable on the param of share file `?roomId=`
+
 # Structure
 - server.js
 - app
